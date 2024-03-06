@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\AppIcon.png" />
     <None Remove="Images\backImage.jpg" />
     <None Remove="Images\keyIcon.png" />
     <None Remove="Images\logo.png" />
@@ -16,15 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\AppIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\backImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
+    <Folder Include="Models\" />
     <Folder Include="Screenshots\" />
-    <Folder Include="ViewModel\" />
   </ItemGroup>
 
   <ItemGroup>
