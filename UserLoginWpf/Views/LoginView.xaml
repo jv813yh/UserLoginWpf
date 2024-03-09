@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UserLoginWpf.Views"
         xmlns:viewModel="clr-namespace:UserLoginWpf.ViewModels"
+        xmlns:customControls="clr-namespace:UserLoginWpf.CustomControls"
         mc:Ignorable="d"
         
         Title="LoginView" 
@@ -24,7 +25,7 @@
     <Window.Resources>
 
         <Style TargetType="TextBox" x:Key="inputTextBox">
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Height" Value="30"/>
             <Setter Property="Foreground" Value="White"/>
@@ -35,21 +36,7 @@
             <Setter Property="Margin" Value="0,5,0,0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
-        
 
-        <Style TargetType="PasswordBox">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="CaretBrush" Value="LightGray"/>
-            <Setter Property="BorderThickness" Value="0,0,0,3"/>
-            <Setter Property="Padding" Value="35,1,1,1"/>
-            <Setter Property="Margin" Value="0,5,0,0"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-        
         <Style TargetType="TextBlock" x:Key="inputTextBlock">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Medium"/>
@@ -76,7 +63,7 @@
         </Border.Background>
         <Border CornerRadius="50"
                 BorderThickness="5"
-                Opacity="0.8">
+                Opacity="0.80">
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="#462AD8" Offset="0.0"/>
@@ -148,7 +135,7 @@
                                Margin="0,30,0,0"/>
 
                     <TextBox x:Name="txtUsername"
-                             Text="{Binding Username, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource inputTextBox}">
                         <TextBox.Background>
                             <ImageBrush ImageSource="/Images/userIcon.png"
@@ -160,22 +147,19 @@
                     <TextBlock Text="Password"
                                Style="{StaticResource inputTextBlock}"/>
 
-                    <PasswordBox x:Name="pswPassword">
-                        <PasswordBox.Background>
-                            <ImageBrush ImageSource="/Images/keyIcon.png"
-                                        Stretch="Uniform"
-                                        AlignmentX="Left"/>
-                        </PasswordBox.Background>
-                    </PasswordBox>
+                    <customControls:BindingAblePassword Password ="{Binding Password, 
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
+                    </customControls:BindingAblePassword>
+                    
                     <Button Content="LOG IN"
                             Grid.Column="2"
                             Background="#A854AD"
                             Foreground="White"
                             x:Name="btnLogin"
-                            Click="btnLoginClik"
                             Margin="0,20,0,0"
                             Width="170"
+                            Command="{Binding LoginCommand}"
                             Height="40"/>
 
                     <StackPanel Orientation="Horizontal">

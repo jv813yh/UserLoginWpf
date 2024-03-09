@@ -1,18 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Net;
+using UserLoginWpf.Interfaces;
+using UserLoginWpf.Repositories;
+using System.Security.Principal;
 
 namespace UserLoginWpf.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        private string _username;
+        private IUserRepository _userRepository;
+        //
+        private string _username = string.Empty;
+
+        //
         private SecureString _password;
-        private string _errorMessage;
+
+        //
+        private string _errorMessage = "";
+        //
         private bool _isViewVisible = true;
 
         public string Username 
@@ -71,29 +78,55 @@ namespace UserLoginWpf.ViewModels
 
         public LoginViewModel()
         {
+            _userRepository = new UserRepository();
+
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             RecoverPasswordCommand = new ViewModelCommand(ExecuteRecoverPasswordCommand);
+
+            //PropertyChanged += OnViewModelPropertyChanged;
         }
+
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            CanExecuteLoginCommand(null);
+        }
+
         private bool CanExecuteLoginCommand(object parameter)
         {
-            bool isValidData;
+            bool isValidData = false;
 
             if(Username.Length < 3 || string.IsNullOrEmpty(Username)
-                || Password.Length < 3 || Password == null)
+                || Password == null)
             {
-                isValidData = false;
+                if(Password != null)
+                {
+                    if (Password.Length < 3)
+                        isValidData = false;
+                }
             }
             else
             {
                 isValidData = true;
             }
 
+
             return isValidData;
         }
 
         private void ExecuteLoginCommand(object parameter)
         {
-
+            bool isValidUser = _userRepository.Authenticate(new NetworkCredential(Username, Password));
+            
+            if(isValidUser)
+            {
+                Thread.CurrentPrincipal = new GenericPrincipal(
+                    new GenericIdentity(Username), null);
+                IsViewVisible = false;
+            }
+            else
+            {
+                ErrorMessage = "Invalid username or password";
+            }
         }
 
         private void ExecuteRecoverPasswordCommand(object parameter)

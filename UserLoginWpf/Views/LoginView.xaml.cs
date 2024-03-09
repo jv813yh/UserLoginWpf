@@ -30,10 +30,5 @@ namespace UserLoginWpf.Views
         {
             Application.Current.Shutdown();
         }
-
-        private void btnLoginClik(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("I am here");
-        }
     }
 }

@@ -4,9 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UserLoginWpf"
+        xmlns:viewModels="clr-namespace:UserLoginWpf.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        
+        Title="MainWindow" 
+        Height="500" Width="700"
+        Icon="/Images/AppIcon.png">
+
+    <Window.DataContext>
+        <viewModels:MainViewModel/>
+    </Window.DataContext>
     <Grid>
 
+        <TextBlock Text="{Binding Path=UserAccount.DisplayName, Mode=OneWay}"
+                   FontSize="25"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontWeight="Heavy"
+                   Foreground="OrangeRed"/>
     </Grid>
 </Window>
