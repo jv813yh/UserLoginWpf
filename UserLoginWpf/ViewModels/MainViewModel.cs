@@ -39,8 +39,11 @@ namespace UserLoginWpf.ViewModels
 
             try
             {
-                // Get the current user from the database and set the UserAccount property
-                user = _userRepository.GetByName(Thread.CurrentPrincipal.Identity.Name);
+                if(Thread.CurrentPrincipal is not null)
+                {
+                    // Get the current user from the database and set the UserAccount property
+                    user = _userRepository.GetByName(Thread.CurrentPrincipal.Identity.Name);
+                }
             }
             catch (Exception)
             {

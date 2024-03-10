@@ -9,9 +9,9 @@ namespace UserLoginWpf.CustomControls
     /// </summary>
     public partial class BindingAblePassword : UserControl
     {
-
         public static readonly DependencyProperty PasswordProperty
             = DependencyProperty.Register("Password", typeof(SecureString), typeof(BindingAblePassword));
+
         public BindingAblePassword()
         {
             InitializeComponent();

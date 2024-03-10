@@ -142,6 +142,23 @@
                                         Stretch="Uniform"
                                         AlignmentX="Left"/>
                         </TextBox.Background>
+                        <Validation.ErrorTemplate>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <AdornedElementPlaceholder x:Name="textBox" />
+                                    <ItemsControl ItemsSource="{Binding}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding ErrorContent}" Foreground="Red"
+                                                    FontSize="12" FontWeight="Medium"
+                                                    FontStyle="Italic"
+                                                    Padding="5"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Validation.ErrorTemplate>
                     </TextBox>
 
                     <TextBlock Text="Password"
@@ -169,6 +186,7 @@
                                    FontFamily="Helvetica"
                                    FontSize="14"
                                    Opacity="0.6"
+                                   Cursor="Hand"
                                    Margin="50,5,0,0"/>
 
                         <TextBlock Text="Reset"
@@ -176,6 +194,7 @@
                                    FontWeight="Medium"
                                    FontFamily="Helvetica"
                                    FontSize="14"
+                                   Cursor="Hand"
                                    Margin="7,5,0,0"/>
 
                     </StackPanel>

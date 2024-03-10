@@ -1,14 +1,15 @@
-﻿using System.ComponentModel;
-using System.Security;
-using System.Windows.Input;
+﻿using System.Collections;
+using System.ComponentModel;
 using System.Net;
+using System.Security;
+using System.Security.Principal;
+using System.Windows.Input;
 using UserLoginWpf.Interfaces;
 using UserLoginWpf.Repositories;
-using System.Security.Principal;
 
 namespace UserLoginWpf.ViewModels
 {
-    public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : ViewModelBase, INotifyDataErrorInfo
     {
         private IUserRepository _userRepository;
         //
@@ -22,6 +23,24 @@ namespace UserLoginWpf.ViewModels
         //
         private bool _isViewVisible = true;
 
+
+        private Dictionary<string, List<string>> _propertyToDictionaryErrors;
+
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+        public bool HasErrors
+            => _propertyToDictionaryErrors.Any();
+
+        public IEnumerable GetErrors(string? propertyName)
+            => _propertyToDictionaryErrors.GetValueOrDefault(propertyName, new List<string>());
+
+        private Dictionary<SecureString, List<string>> _secureStringToDictionaryErrors;
+
+        public event EventHandler<DataErrorsChangedEventArgs>? SecureStringErrorsChanged;
+        public bool HasErrorsSecureString
+            => _secureStringToDictionaryErrors.Any();
+
+        public IEnumerable GetErrorsFromSecureString(SecureString propertyName)
+            => _secureStringToDictionaryErrors.GetValueOrDefault(propertyName, new List<string>());
         public string Username 
         { 
             get => _username; 
@@ -31,6 +50,19 @@ namespace UserLoginWpf.ViewModels
                 {
                     _username = value;
                     OnPropertyChanged(nameof(Username));
+
+                    _propertyToDictionaryErrors.Remove(nameof(Username));
+
+                    if(string.IsNullOrEmpty(_username))
+                    {
+                        _propertyToDictionaryErrors.Add(nameof(Username), new List<string> { "Username is required" });
+                    }
+                    else if(_username.Length < 3)
+                    {
+                        _propertyToDictionaryErrors.Add(nameof(Username), new List<string> { "Username must be at least 3 characters" });
+                    }
+
+                    ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(Username)));
                 }
             }  
         }
@@ -43,6 +75,19 @@ namespace UserLoginWpf.ViewModels
                 {
                     _password = value;
                     OnPropertyChanged(nameof(Password));
+
+                    _secureStringToDictionaryErrors.Remove(Password);
+
+                    if (string.IsNullOrEmpty(_username))
+                    {
+                        _secureStringToDictionaryErrors.Add(Password, new List<string> { "Password is required" });
+                    }
+                    else if (_username.Length < 3)
+                    {
+                        _secureStringToDictionaryErrors.Add(Password, new List<string> { "Password must be at least 3 characters" });
+                    }
+
+                    SecureStringErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(Password.ToString()));
                 }
             }
         }
@@ -58,7 +103,7 @@ namespace UserLoginWpf.ViewModels
                 }
             }
         }
-        public bool IsViewVisible 
+        public bool IsViewVisible
         { 
             get => _isViewVisible;
             set
@@ -79,16 +124,11 @@ namespace UserLoginWpf.ViewModels
         public LoginViewModel()
         {
             _userRepository = new UserRepository();
+            _propertyToDictionaryErrors = new Dictionary<string, List<string>>();
+            _secureStringToDictionaryErrors = new Dictionary<SecureString, List<string>>();
 
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
-            RecoverPasswordCommand = new ViewModelCommand(ExecuteRecoverPasswordCommand);
-
-            //PropertyChanged += OnViewModelPropertyChanged;
-        }
-
-        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            CanExecuteLoginCommand(null);
+            RecoverPasswordCommand = new ViewModelCommand(ExecuteRecoverCommand);
         }
 
         private bool CanExecuteLoginCommand(object parameter)
@@ -109,7 +149,6 @@ namespace UserLoginWpf.ViewModels
                 isValidData = true;
             }
 
-
             return isValidData;
         }
 
@@ -126,12 +165,18 @@ namespace UserLoginWpf.ViewModels
             else
             {
                 ErrorMessage = "Invalid username or password";
+               // ExecuteRecoverCommand(null);
             }
         }
 
-        private void ExecuteRecoverPasswordCommand(object parameter)
+        // TBD, need to be fixed !!!
+        private void ExecuteRecoverCommand(object? parameter)
         {
-
+            Username = string.Empty;
+            Password.Clear();
+            Password.Dispose();
+            Password = new SecureString();
         }
+
     }
 }

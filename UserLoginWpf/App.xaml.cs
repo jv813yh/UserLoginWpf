@@ -24,7 +24,8 @@ namespace UserLoginWpf
                     var mainWindow = new MainWindow();
                     mainWindow.Show();
 
-                    loginWindow.Close();
+                    if(mainWindow.IsVisible == true)
+                        loginWindow.Close();
                 }
             };
        }

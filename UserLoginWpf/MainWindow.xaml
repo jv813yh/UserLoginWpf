@@ -9,6 +9,7 @@
         
         Title="MainWindow" 
         Height="500" Width="700"
+        WindowStartupLocation="CenterScreen"
         Icon="/Images/AppIcon.png">
 
     <Window.DataContext>
