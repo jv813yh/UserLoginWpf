@@ -1,4 +1,4 @@
-# I showed how to bind to a PasswordBox by creating a custom control. 
+# Simple example how to bind to a PasswordBox by creating a custom control. 
 
 One of the most frustrating issues with the WPF PasswordBox is that the Password property is not a DependencyProperty. 
 Therefore, view models can not bind to the Password property. 
